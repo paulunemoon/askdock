@@ -16,8 +16,15 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+
       - run: pnpm install --frozen-lockfile
-      - run: pnpm typecheck
-      # The tests read from dist, and the demo build is the integration check.
+
+      # Build first: packages resolve each other through dist/, and a fresh
+      # clone has none. Typecheck and tests both read what this produces.
       - run: pnpm build
+      - run: pnpm typecheck
       - run: pnpm test
+
+      # The demo is the integration check — a real Next build against the
+      # published entry points. It needs no key: nothing calls a model here.
+      - run: pnpm --filter askdock-demo build
