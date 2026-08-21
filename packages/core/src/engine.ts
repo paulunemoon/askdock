@@ -89,6 +89,14 @@ export async function* ask(
   let flushed = 0;
 
   /**
+   * streamText does not throw: a provider failure arrives through onError and
+   * the stream simply ends. Without catching it here, an outage would reach
+   * the visitor as "I could not answer that" — a refusal, which is a lie about
+   * whose fault it is.
+   */
+  let failure: unknown = null;
+
+  /**
    * Hold back any tail that could still turn into the SOURCES line, so the
    * model's bookkeeping never flashes on screen mid-stream.
    */
@@ -113,6 +121,7 @@ export async function* ask(
       abortSignal: input.signal,
       // streamText swallows errors into the stream; this is where they surface.
       onError({ error }) {
+        failure = error;
         console.error("[askdock] model", error);
       },
     });
@@ -132,10 +141,12 @@ export async function* ask(
     if (answer.length > flushed) yield { type: "text", value: answer.slice(flushed) };
 
     if (!full.trim()) {
-      yield {
-        type: "error",
-        value: "I couldn't answer that one. Try asking about something on this site.",
-      };
+      yield failure
+        ? { type: "error", value: messageFor(failure) }
+        : {
+            type: "error",
+            value: "I couldn't answer that one. Try asking about something on this site.",
+          };
       return;
     }
 
@@ -145,18 +156,28 @@ export async function* ask(
     // Server-side only: a provider error can carry the request, so never
     // let it reach the browser.
     console.error("[askdock]", err);
-    const status = (err as { statusCode?: number; status?: number }).statusCode ??
-      (err as { status?: number }).status;
-    yield {
-      type: "error",
-      value:
-        status === 429
-          ? "The assistant has answered a lot of questions today — try again later."
-          : "Something went wrong on my side. Try again in a moment.",
-    };
+    yield { type: "error", value: messageFor(err) };
   } finally {
     yield { type: "done" };
   }
+}
+
+/**
+ * What the visitor is told when the provider fails. Never the provider's own
+ * message: it can quote the request back, prompt and all.
+ */
+function messageFor(error: unknown): string {
+  const status =
+    (error as { statusCode?: number }).statusCode ?? (error as { status?: number }).status;
+
+  if (status === 429) {
+    return "The assistant has answered a lot of questions today — try again later.";
+  }
+  // 503 is the free tiers under load, and it clears on its own.
+  if (status === 503 || status === 502 || status === 504) {
+    return "The assistant is busy right now. Give it a few seconds and ask again.";
+  }
+  return "Something went wrong on my side. Try again in a moment.";
 }
 
 /** Map the model's `SOURCES: a, b` line back onto real pages. */

@@ -19,7 +19,13 @@ import { Answer, type LinkProps } from "./markdown.js";
 import { injectStyles } from "./styles.js";
 import { useAskdock } from "./useAskdock.js";
 
-export interface AskdockProps extends Partial<WidgetConfig> {
+export interface AskdockProps extends Omit<Partial<WidgetConfig>, "disclaimer"> {
+  /**
+   * The line under the field. A string in the script embed, because attributes
+   * only carry strings; in React it can be markup, so the "email us" in it can
+   * be a real link.
+   */
+  disclaimer?: ReactNode;
   /** Where the widget posts. Must be a route running `@askdock/server`. */
   endpoint?: string;
   /** Paths the assistant may turn into links — usually your top-level sections. */
