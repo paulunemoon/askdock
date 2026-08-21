@@ -17,8 +17,8 @@ export const CSS = String.raw`
   color: var(--ad-fg);
   -webkit-font-smoothing: antialiased;
 }
-.ad-root *, .ad-root *::before, .ad-root *::after { box-sizing: border-box; }
-.ad-root button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+:where(.ad-root) :where(*, *::before, *::after) { box-sizing: border-box; }
+:where(.ad-root) :where(button) { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
 .ad-root :focus-visible { outline: 2px solid var(--ad-accent); outline-offset: 2px; }
 
 /* ---------------------------------------------------------------- placing */
@@ -108,7 +108,7 @@ export const CSS = String.raw`
 .ad-avatar {
   display: grid; place-items: center;
   width: 26px; height: 26px; border-radius: 50%; flex: none;
-  background: var(--ad-accent); color: var(--ad-accent-fg);
+  background: var(--ad-brand); color: var(--ad-brand-fg);
 }
 .ad-head-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
 .ad-head-text strong { font-size: 13px; font-weight: 600; }
@@ -117,7 +117,7 @@ export const CSS = String.raw`
   display: grid; place-items: center; width: 28px; height: 28px; flex: none;
   border-radius: var(--ad-radius-sm); color: var(--ad-muted);
 }
-.ad-close:hover { background: var(--ad-bubble-bg); color: var(--ad-fg); }
+.ad-close:hover { background: var(--ad-subtle); color: var(--ad-fg); }
 
 /* -------------------------------------------------------------------- log */
 
@@ -132,7 +132,7 @@ export const CSS = String.raw`
   border: 1px solid var(--ad-border); border-radius: var(--ad-radius-sm);
   color: var(--ad-fg); transition: background .15s ease;
 }
-.ad-starter:hover { background: var(--ad-bubble-bg); }
+.ad-starter:hover { background: var(--ad-subtle); }
 .ad-starter > svg { flex: none; color: var(--ad-muted); }
 
 .ad-from-user {
@@ -182,7 +182,7 @@ export const CSS = String.raw`
   padding: 7px 10px; font-size: 13px; text-decoration: none; color: var(--ad-fg);
   border: 1px solid var(--ad-border); border-radius: var(--ad-radius-sm);
 }
-.ad-source:hover { background: var(--ad-bubble-bg); }
+.ad-source:hover { background: var(--ad-subtle); }
 .ad-source > span:first-child { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ad-source-kind { font-size: 11px; color: var(--ad-muted); flex: none; }
 .ad-source > svg { flex: none; color: var(--ad-muted); }
@@ -192,9 +192,10 @@ export const CSS = String.raw`
 .ad-field {
   display: flex; align-items: center; gap: 8px; margin: 0 14px;
   padding: 6px 6px 6px 12px;
+  background: var(--ad-subtle);
   border: 1px solid var(--ad-border); border-radius: 999px;
 }
-.ad-field:focus-within { border-color: var(--ad-accent); }
+.ad-field:focus-within { background: var(--ad-bg); border-color: var(--ad-accent); }
 .ad-field input {
   flex: 1; min-width: 0; border: 0; background: none; outline: none;
   font: inherit; color: var(--ad-fg); padding: 4px 0;
@@ -202,10 +203,10 @@ export const CSS = String.raw`
 .ad-field input::placeholder { color: var(--ad-muted); }
 .ad-send {
   display: grid; place-items: center; width: 30px; height: 30px; flex: none;
-  border-radius: 50%; background: var(--ad-bubble-bg); color: var(--ad-muted);
+  border-radius: 50%; background: var(--ad-subtle); color: var(--ad-muted);
   transition: background .15s ease, color .15s ease;
 }
-.ad-send[data-on="true"] { background: var(--ad-accent); color: var(--ad-accent-fg); }
+.ad-send[data-on="true"] { background: var(--ad-brand); color: var(--ad-brand-fg); }
 .ad-send:disabled { cursor: default; }
 
 .ad-disclaimer { margin: 10px 14px 12px; font-size: 11px; text-align: center; color: var(--ad-muted); }

@@ -30,10 +30,24 @@ export interface Theme {
   muted: string;
   /** Hairlines and the field outline. */
   border: string;
-  /** Send button, launcher fill, focus ring. */
+  /** Launcher fill and focus ring. Must be a plain colour — outlines are lines. */
   accent: string;
   /** Text on `accent`. */
   accentFg: string;
+  /**
+   * The two surfaces that carry a brand: the mark in the header, and the send
+   * button once there is something to send. Nothing here is ever used as a
+   * line, so a `linear-gradient(…)` is as valid as a colour. Defaults to
+   * `accent`.
+   */
+  brand: string;
+  brandFg: string;
+  /**
+   * Quiet fills: what a row goes to on hover, the input, the idle send button.
+   * Not the same thing as `bubbleBg` — a site whose visitor messages are black
+   * does not want black hovers.
+   */
+  subtle: string;
   /** The visitor's own messages. */
   bubbleBg: string;
   bubbleFg: string;
@@ -58,6 +72,9 @@ export const lightTheme: Theme = {
   border: "rgba(10, 10, 10, 0.12)",
   accent: "#0a0a0a",
   accentFg: "#ffffff",
+  brand: "#0a0a0a",
+  brandFg: "#ffffff",
+  subtle: "#f4f4f4",
   bubbleBg: "#f4f4f4",
   bubbleFg: "#0a0a0a",
   radius: "16px",
@@ -77,6 +94,9 @@ export const darkTheme: Theme = {
   border: "rgba(250, 250, 250, 0.16)",
   accent: "#fafafa",
   accentFg: "#0a0a0a",
+  brand: "#fafafa",
+  brandFg: "#0a0a0a",
+  subtle: "#1c1c1c",
   bubbleBg: "#1c1c1c",
   bubbleFg: "#fafafa",
   shadow: "0 12px 40px rgba(0, 0, 0, 0.5)",
@@ -139,6 +159,9 @@ const CSS_VAR: Record<keyof Theme, string> = {
   border: "--ad-border",
   accent: "--ad-accent",
   accentFg: "--ad-accent-fg",
+  brand: "--ad-brand",
+  brandFg: "--ad-brand-fg",
+  subtle: "--ad-subtle",
   bubbleBg: "--ad-bubble-bg",
   bubbleFg: "--ad-bubble-fg",
   radius: "--ad-radius",

@@ -92,7 +92,20 @@ export function useAskdock({ endpoint, maxHistory = 12, body, headers }: UseAskd
           }
         }
       } catch (err) {
-        if ((err as Error).name !== "AbortError") setError((err as Error).message);
+        const error = err as Error;
+        if (error.name === "AbortError") return;
+        /**
+         * A rejected fetch means the request never landed — the server is
+         * down, the endpoint is wrong, or something between the two dropped
+         * it. The browser's own wording for that is "Failed to fetch", which
+         * tells a visitor nothing and sends a developer looking in the wrong
+         * place.
+         */
+        setError(
+          error instanceof TypeError
+            ? "Couldn't reach the assistant. It may be offline — try again in a moment."
+            : error.message
+        );
       } finally {
         setStreaming(false);
         abortRef.current = null;
