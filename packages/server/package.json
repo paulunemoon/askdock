@@ -1,0 +1,13 @@
+{
+  "name": "@askdock/server",
+  "version": "0.1.0",
+  "description": "Web handler for Askdock — Next.js route handlers, Hono, Bun, Deno, or plain fetch.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" } },
+  "files": ["dist"],
+  "scripts": { "build": "tsup", "typecheck": "tsc --noEmit" },
+  "dependencies": { "@askdock/core": "workspace:*" }
+}

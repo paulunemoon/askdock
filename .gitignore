@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.next/
+out/
+*.tsbuildinfo
+
+# Secrets — never commit a provider key
+.env
+.env.*
+!.env.example
+
+# Generated knowledge base (regenerate with `askdock ingest`)
+.askdock/
+
+.DS_Store
+*.log
+
+# The demo ships its corpus so a fresh clone runs without an ingest.
+!apps/demo/.askdock/

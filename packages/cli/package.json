@@ -1,0 +1,18 @@
+{
+  "name": "askdock",
+  "version": "0.1.0",
+  "description": "Crawl a site into a knowledge base your chat widget can answer from.",
+  "license": "MIT",
+  "type": "module",
+  "bin": { "askdock": "./dist/cli.js" },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./package.json": "./package.json"
+  },
+  "files": ["dist"],
+  "scripts": { "build": "tsup", "typecheck": "tsc --noEmit" },
+  "dependencies": { "@askdock/core": "workspace:*" },
+  "engines": { "node": ">=20" }
+}

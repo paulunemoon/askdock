@@ -1,0 +1,28 @@
+{
+  "name": "askdock-demo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "ingest": "askdock ingest ./content --base-url http://localhost:3000/docs/ --name \"Askdock\" --out ./.askdock/corpus.json",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@askdock/core": "workspace:*",
+    "@askdock/react": "workspace:*",
+    "@askdock/server": "workspace:*",
+    "@ai-sdk/google": "^4.0.49",
+    "next": "^16.2.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "askdock": "workspace:*",
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.9.2"
+  }
+}

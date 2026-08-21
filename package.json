@@ -1,0 +1,17 @@
+{
+  "name": "askdock-monorepo",
+  "private": true,
+  "packageManager": "pnpm@10.13.1",
+  "scripts": {
+    "build": "pnpm --filter @askdock/core build && pnpm --filter @askdock/server build && pnpm --filter @askdock/react build && pnpm --filter askdock build && pnpm --filter @askdock/embed build",
+    "dev": "pnpm --filter askdock-demo dev",
+    "typecheck": "pnpm -r typecheck",
+    "clean": "rm -rf packages/*/dist apps/*/.next",
+    "test": "pnpm --filter @askdock/core test && pnpm --filter @askdock/embed test"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "@types/node": "^22.15.0"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "@askdock/embed",
+  "version": "0.1.0",
+  "description": "One <script> tag. Drops the Askdock widget onto any site — Webflow, WordPress, Astro, plain HTML.",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./askdock.js": "./dist/askdock.js"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node test/smoke.mjs"
+  },
+  "dependencies": {
+    "@askdock/core": "workspace:*",
+    "@askdock/react": "workspace:*",
+    "preact": "^10.27.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^30.0.0",
+    "esbuild": "^0.25.0",
+    "jsdom": "^30.0.1"
+  }
+}

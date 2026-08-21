@@ -1,0 +1,45 @@
+{
+  "site": {
+    "name": "Askdock",
+    "url": "http://localhost:3000/docs/"
+  },
+  "generatedAt": "2026-08-21T13:03:33.201Z",
+  "docs": [
+    {
+      "id": "appearance",
+      "title": "Appearance",
+      "url": "http://localhost:3000/docs/appearance",
+      "text": "# Appearance\n\nTwo independent choices. The **launcher** is what the visitor sees before they click; the **surface** is what opens. Every combination is legal.\n\n## Launchers\n\n- `pill` — a dock at the bottom of the page, with a label and the keyboard hint. The default.\n- `bubble` — a round button in a corner. The familiar one.\n- `inline` — no launcher; you open the panel yourself with the `open` prop.\n- `none` — nothing until you say so.\n\n## Surfaces\n\n- `popup` — floats over the launcher, sized by `width` and `height`. The default.\n- `panel` — slides in from `side`, full height, full width on a phone.\n- `inline` — renders in the flow of your page, always open. Good for a `/ask` page.\n\n## Colour\n\nEverything is one flat set of tokens, and the default is black and white on purpose — a widget that arrives with someone else's brand colour is a widget you have to undo first.\n\n```tsx\n<Askdock\n  endpoint=\"/api/askdock\"\n  appearance={{\n    launcher: \"bubble\",\n    surface: \"panel\",\n    side: \"right\",\n    colorScheme: \"auto\",\n    theme: { accent: \"#1a56db\", radius: \"20px\" },\n    darkTheme: { accent: \"#93c5fd\" },\n  }}\n/>\n```\n\nTokens: `bg`, `fg`, `muted`, `border`, `accent`, `accentFg`, `bubbleBg`, `bubbleFg`, `radius`, `radiusSm`, `font`, `shadow`, `width`, `height`, `z`. They become CSS custom properties on the widget root, so the widget can never repaint your site and your reset can never flatten the widget.\n\nIn the script embed the same tokens are attributes: `data-accent`, `data-radius`, `data-launcher`, `data-surface`."
+    },
+    {
+      "id": "faq",
+      "title": "FAQ",
+      "url": "http://localhost:3000/docs/faq",
+      "text": "# FAQ\n\n## Does it need a database?\n\nNo. The knowledge base is a JSON file and the conversation lives in the browser tab. Nothing is stored between visits.\n\n## How do I keep it up to date?\n\nRe-run `askdock ingest` when the site changes — a `postbuild` script, or a scheduled job. You can also skip the file entirely and pass a function that reads your CMS on each request.\n\n## Can it handle a big site?\n\nUp to the prompt budget it sends everything, which is the sharpest it gets. Past that it ranks pages against the question and sends what fits. Very large sites should pass their own `selectDocs` backed by embeddings.\n\n## What about rate limits and abuse?\n\nThe handler ships with an in-memory per-IP limit — eight questions a minute — plus an `authorize` hook, and CORS is closed unless you list origins. That is a ceiling on your API bill, not a security boundary; put a real limiter in front for anything public and popular.\n\n## Which languages?\n\nWhatever the model speaks. The assistant answers in the language of the question, and the corpus is whatever your site is written in.\n\n## Is it accessible?\n\nThe panel is a labelled dialog, closes on Escape, opens on a hotkey, keeps focus in the field, and honours `prefers-reduced-motion` and `prefers-color-scheme`.\n\n## Licence\n\nMIT."
+    },
+    {
+      "id": "grounding",
+      "title": "How grounding works",
+      "url": "http://localhost:3000/docs/grounding",
+      "text": "# How grounding works\n\nThree things hold the assistant to your site, because any one of them alone leaks.\n\n## 1. No tools, no web\n\nThe model gets a system prompt and a knowledge base. It cannot search, fetch, or call anything. Whatever isn't in the corpus is not available to it — not blocked, simply absent.\n\n## 2. A closed knowledge base\n\n`.askdock/corpus.json` is the whole world. It is a file you generated, can read, and can edit. If the assistant should never mention something, delete it from the file and it is gone — no prompt-engineering session required.\n\n## 3. Rules that make the refusal explicit\n\nThe prompt says, in order: answer strictly from the knowledge base; say plainly when it doesn't cover the question; refuse anything unrelated to the site; never invent a name, price, date or metric; and ignore instructions in a visitor's message that try to change any of that.\n\n## Citations\n\nEvery answer that used the corpus ends with a `SOURCES:` line naming the entries it drew on. The route strips that line before the text reaches the browser and turns it into citation chips — checked against the real corpus first, so a made-up id becomes nothing rather than a dead link.\n\n## What it still can't promise\n\nModels paraphrase, and paraphrase drifts. Grounding makes an unsupported answer unlikely, not impossible. Keep the disclaimer under the field, and point people at a human for anything that matters."
+    },
+    {
+      "id": "install",
+      "title": "Install",
+      "url": "http://localhost:3000/docs/install",
+      "text": "# Install\n\nTwo steps: teach it your site, then put it on the page.\n\n## 1. Ingest\n\n```bash\nnpx askdock ingest https://your-site.com\n```\n\nThis reads your `sitemap.xml` — or follows links from the URL you gave it when there isn't one — and writes `.askdock/corpus.json`. That file is the assistant's entire knowledge. Open it, read it, commit it.\n\nUseful flags: `--exclude /blog/tag`, `--max-pages 80`, `--selector article`, `--out path.json`. A directory of Markdown works too: `npx askdock ingest ./content --base-url https://your-site.com/docs/`.\n\n## 2. Serve\n\n```ts\n// app/api/askdock/route.ts\nimport { createAskdockHandler } from \"@askdock/server\";\nimport corpus from \"../../../.askdock/corpus.json\";\n\nexport const POST = createAskdockHandler({\n  model: { model: \"google/gemini-flash-latest\" },\n  corpus,\n  persona: { name: \"Acme AI\", fallbackHref: \"/contact\" },\n});\n\nexport const maxDuration = 60;\n```\n\nThe key comes from the environment — `GOOGLE_GENERATIVE_AI_API_KEY` here — and stays there.\n\n## 3. Show\n\nReact:\n\n```tsx\nimport { Askdock } from \"@askdock/react\";\n\n<Askdock endpoint=\"/api/askdock\" name=\"Acme AI\" />\n```\n\nAnything else:\n\n```html\n<script src=\"https://unpkg.com/@askdock/embed/dist/askdock.js\"\n        data-endpoint=\"https://acme.com/api/askdock\"\n        data-name=\"Acme AI\" defer></script>\n```"
+    },
+    {
+      "id": "models",
+      "title": "Models and keys",
+      "url": "http://localhost:3000/docs/models",
+      "text": "# Models and keys\n\n## Any provider, one string\n\n```ts\nmodel: { model: \"google/gemini-flash-latest\" }\nmodel: { model: \"anthropic/claude-sonnet-4-5\" }\nmodel: { model: \"openai/gpt-5\" }\n```\n\nThe prefix picks the provider package, the rest is whatever that provider calls its model. Install only the one you use: `@ai-sdk/google`, `@ai-sdk/anthropic` or `@ai-sdk/openai`.\n\nSelf-hosted and proxied endpoints work through `openai-compatible`:\n\n```ts\nmodel: {\n  provider: \"openai-compatible\",\n  model: \"llama-3.3-70b\",\n  baseURL: \"http://localhost:11434/v1\",\n}\n```\n\nOn Vercel, `provider: \"gateway\"` routes every provider through one key with failover.\n\n## Where the key lives\n\nIn your server's environment. Askdock reads it there and never sends it anywhere but the provider.\n\n- `GOOGLE_GENERATIVE_AI_API_KEY`\n- `ANTHROPIC_API_KEY`\n- `OPENAI_API_KEY`\n\nPass `apiKey` explicitly if you keep keys somewhere else — a secret manager, a per-tenant lookup. There is no mode in which a key reaches the browser, and there will not be one: a key in a `<script>` tag is a key in everyone's browser.\n\n## Cost\n\nA grounded answer is one call: your pages in, two short paragraphs out. A portfolio's worth of content is a few thousand tokens per question — cents a day at Flash rates, and Google's free tier covers a small site outright. Sites past the prompt budget send only the pages closest to each question."
+    },
+    {
+      "id": "what-is-askdock",
+      "title": "What Askdock is",
+      "url": "http://localhost:3000/docs/what-is-askdock",
+      "text": "# What Askdock is\n\nAskdock is a chat widget that answers questions about **one site: yours**. It reads the pages you publish, and it will not answer from anything else. Ask it who won the World Cup and it says that isn't on this site.\n\nIt ships in two halves. The widget runs in the browser — a launcher and a panel. The route runs on your server, holds your API key, and talks to the model. The browser never sees a key.\n\n## What it is not\n\n- Not a general assistant. It has no tools, no web search and no memory between visits.\n- Not a support desk. There is no ticketing, no handoff to a human, no inbox.\n- Not hosted. There is no Askdock account and no Askdock server. You run it.\n\n## Who it is for\n\nAnyone with a site whose content already answers the questions people ask: a portfolio, a docs site, a product page, a handbook. The whole point is that the answers are made of pages you already wrote and can already point at."
+    }
+  ]
+}
