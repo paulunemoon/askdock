@@ -8,7 +8,14 @@ export {
   type Corpus,
   type CorpusDoc,
 } from "./corpus.js";
-export { ask, parseSources, type AskInput, type EngineConfig, type Turn } from "./engine.js";
+export {
+  ask,
+  messageFor,
+  parseSources,
+  type AskInput,
+  type EngineConfig,
+  type Turn,
+} from "./engine.js";
 export {
   API_KEY_ENV,
   parseModel,

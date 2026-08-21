@@ -97,3 +97,16 @@ test("a malformed corpus is caught before it reaches a model", () => {
   assert.throws(() => assertCorpus({ docs: [] }), /site\.name/);
   assert.throws(() => assertCorpus({ site: { name: "x" }, docs: [{ id: "a" }] }), /missing id, title or text/);
 });
+
+test("a wrapped provider error still says what went wrong", async () => {
+  const { messageFor } = await import("../dist/index.js");
+
+  assert.match(messageFor({ statusCode: 429 }), /a lot of questions/);
+  assert.match(messageFor({ statusCode: 503 }), /busy right now/);
+  // What the AI SDK throws after exhausting its retries.
+  assert.match(
+    messageFor({ name: "AI_RetryError", lastError: { statusCode: 429 } }),
+    /a lot of questions/
+  );
+  assert.match(messageFor(new Error("who knows")), /went wrong/);
+});

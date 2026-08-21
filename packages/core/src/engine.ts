@@ -166,9 +166,13 @@ export async function* ask(
  * What the visitor is told when the provider fails. Never the provider's own
  * message: it can quote the request back, prompt and all.
  */
-function messageFor(error: unknown): string {
+export function messageFor(error: unknown): string {
+  // The SDK retries, then throws an AI_RetryError whose own status is empty —
+  // the one that says what actually happened is on the error it wrapped.
+  const inner =
+    (error as { lastError?: unknown }).lastError ?? (error as { cause?: unknown }).cause ?? error;
   const status =
-    (error as { statusCode?: number }).statusCode ?? (error as { status?: number }).status;
+    (inner as { statusCode?: number }).statusCode ?? (inner as { status?: number }).status;
 
   if (status === 429) {
     return "The assistant has answered a lot of questions today — try again later.";
