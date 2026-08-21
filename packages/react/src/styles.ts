@@ -195,7 +195,11 @@ export const CSS = String.raw`
   background: var(--ad-subtle);
   border: 1px solid var(--ad-border); border-radius: 999px;
 }
-.ad-field:focus-within { background: var(--ad-bg); border-color: var(--ad-accent); }
+/* The field is the focus indicator: it lifts to the panel background and its
+   hairline darkens. The input inside must not draw a second ring — an
+   accent-coloured rectangle inside a rounded field reads as a rendering bug. */
+.ad-field:focus-within { background: var(--ad-bg); border-color: var(--ad-muted); }
+.ad-field input:focus-visible { outline: none; }
 .ad-field input {
   flex: 1; min-width: 0; border: 0; background: none; outline: none;
   font: inherit; color: var(--ad-fg); padding: 4px 0;
