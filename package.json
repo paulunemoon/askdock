@@ -7,7 +7,8 @@
     "dev": "pnpm --filter askdock-demo dev",
     "typecheck": "pnpm -r typecheck",
     "clean": "rm -rf packages/*/dist apps/*/.next",
-    "test": "pnpm --filter @askdock/core test && pnpm --filter @askdock/embed test"
+    "test": "pnpm --filter @askdock/core test && pnpm --filter @askdock/embed test",
+    "release": "pnpm build && pnpm test && pnpm --filter @askdock/core publish --no-git-checks && pnpm --filter @askdock/server publish --no-git-checks && pnpm --filter @askdock/react publish --no-git-checks && pnpm --filter @askdock/embed publish --no-git-checks && pnpm --filter askdock publish --no-git-checks"
   },
   "devDependencies": {
     "tsup": "^8.5.0",

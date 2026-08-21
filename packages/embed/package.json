@@ -44,5 +44,8 @@
     "claude",
     "openai",
     "support"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
