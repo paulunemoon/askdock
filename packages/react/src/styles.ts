@@ -19,7 +19,7 @@ export const CSS = String.raw`
 }
 :where(.ad-root) :where(*, *::before, *::after) { box-sizing: border-box; }
 :where(.ad-root) :where(button) { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
-.ad-root :focus-visible { outline: 2px solid var(--ad-accent); outline-offset: 2px; }
+.ad-root :focus-visible:not(input) { outline: 2px solid var(--ad-accent); outline-offset: 2px; }
 
 /* ---------------------------------------------------------------- placing */
 
@@ -207,7 +207,7 @@ export const CSS = String.raw`
 .ad-field input::placeholder { color: var(--ad-muted); }
 .ad-send {
   display: grid; place-items: center; width: 30px; height: 30px; flex: none;
-  border-radius: 50%; background: var(--ad-subtle); color: var(--ad-muted);
+  border-radius: 50%; background: var(--ad-border); color: var(--ad-muted);
   transition: background .15s ease, color .15s ease;
 }
 .ad-send[data-on="true"] { background: var(--ad-brand); color: var(--ad-brand-fg); }
