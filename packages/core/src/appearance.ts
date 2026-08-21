@@ -43,6 +43,12 @@ export interface Theme {
   brand: string;
   brandFg: string;
   /**
+   * The small mark beside the intro and every answer — the one piece of the
+   * conversation that says whose assistant this is. Drawn as a glyph, not a
+   * fill, so unlike `brand` it has to be a plain colour. Defaults to `accent`.
+   */
+  mark: string;
+  /**
    * Quiet fills: what a row goes to on hover, the input, the idle send button.
    * Not the same thing as `bubbleBg` — a site whose visitor messages are black
    * does not want black hovers.
@@ -74,6 +80,7 @@ export const lightTheme: Theme = {
   accentFg: "#ffffff",
   brand: "#0a0a0a",
   brandFg: "#ffffff",
+  mark: "#0a0a0a",
   subtle: "#f4f4f4",
   bubbleBg: "#f4f4f4",
   bubbleFg: "#0a0a0a",
@@ -96,6 +103,7 @@ export const darkTheme: Theme = {
   accentFg: "#0a0a0a",
   brand: "#fafafa",
   brandFg: "#0a0a0a",
+  mark: "#fafafa",
   subtle: "#1c1c1c",
   bubbleBg: "#1c1c1c",
   bubbleFg: "#fafafa",
@@ -161,6 +169,7 @@ const CSS_VAR: Record<keyof Theme, string> = {
   accentFg: "--ad-accent-fg",
   brand: "--ad-brand",
   brandFg: "--ad-brand-fg",
+  mark: "--ad-mark",
   subtle: "--ad-subtle",
   bubbleBg: "--ad-bubble-bg",
   bubbleFg: "--ad-bubble-fg",

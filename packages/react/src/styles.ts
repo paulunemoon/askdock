@@ -123,7 +123,7 @@ export const CSS = String.raw`
 
 .ad-log { flex: 1; overflow-y: auto; overscroll-behavior: contain; padding: 16px 14px; display: flex; flex-direction: column; gap: 14px; }
 .ad-intro { display: flex; gap: 8px; margin: 0; color: var(--ad-fg); }
-.ad-intro > svg { flex: none; margin-top: 4px; color: var(--ad-muted); }
+.ad-intro > svg { flex: none; margin-top: 4px; color: var(--ad-mark); }
 .ad-try { margin: 4px 0 0; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ad-muted); }
 .ad-starters { display: flex; flex-direction: column; gap: 6px; }
 .ad-starter {
@@ -141,7 +141,7 @@ export const CSS = String.raw`
   background: var(--ad-bubble-bg); color: var(--ad-bubble-fg);
 }
 .ad-from-ai { display: flex; gap: 8px; }
-.ad-from-ai > svg { flex: none; margin-top: 4px; color: var(--ad-muted); }
+.ad-from-ai > svg { flex: none; margin-top: 4px; color: var(--ad-mark); }
 .ad-from-ai > div { min-width: 0; flex: 1; }
 
 .ad-answer p, .ad-answer ul { margin: 0 0 8px; }

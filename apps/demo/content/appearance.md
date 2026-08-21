@@ -37,7 +37,7 @@ Everything is one flat set of tokens, and the default is black and white on purp
 />
 ```
 
-Tokens: `bg`, `fg`, `muted`, `border`, `accent`, `accentFg`, `brand`, `brandFg`, `subtle`, `bubbleBg`, `bubbleFg`, `radius`, `radiusSm`, `font`, `shadow`, `width`, `height`, `z`.
+Tokens: `bg`, `fg`, `muted`, `border`, `accent`, `accentFg`, `brand`, `brandFg`, `mark`, `subtle`, `bubbleBg`, `bubbleFg`, `radius`, `radiusSm`, `font`, `shadow`, `width`, `height`, `z`.
 
 Three are easy to confuse. `accent` draws lines and focus rings, so it has to be a plain colour. `brand` fills the mark in the header and the send button, so it can be a `linear-gradient(…)`. `subtle` is for quiet fills — what a row goes to on hover, the input — and is deliberately not `bubbleBg`: a site whose visitor messages are black does not want black hovers. They become CSS custom properties on the widget root, so the widget can never repaint your site and your reset can never flatten the widget.
 
