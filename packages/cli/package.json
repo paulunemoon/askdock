@@ -1,6 +1,6 @@
 {
   "name": "askdock",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Crawl a site into a knowledge base your chat widget can answer from.",
   "license": "MIT",
   "type": "module",

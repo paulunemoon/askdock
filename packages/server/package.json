@@ -1,6 +1,6 @@
 {
   "name": "@askdock/server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Web handler for Askdock — Next.js route handlers, Hono, Bun, Deno, or plain fetch.",
   "license": "MIT",
   "type": "module",

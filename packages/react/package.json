@@ -1,6 +1,6 @@
 {
   "name": "@askdock/react",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The Askdock widget for React — pill or bubble launcher, popup or side panel, fully themeable.",
   "license": "MIT",
   "type": "module",

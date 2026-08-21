@@ -1,6 +1,6 @@
 {
   "name": "@askdock/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Grounded chat engine: answers only from a site's own content. Provider-agnostic.",
   "license": "MIT",
   "type": "module",

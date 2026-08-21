@@ -1,6 +1,6 @@
 {
   "name": "@askdock/embed",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "One <script> tag. Drops the Askdock widget onto any site — Webflow, WordPress, Astro, plain HTML.",
   "license": "MIT",
   "type": "module",

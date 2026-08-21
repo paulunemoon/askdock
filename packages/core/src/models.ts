@@ -58,17 +58,39 @@ export const API_KEY_ENV: Record<Exclude<ProviderId, "gateway">, string> = {
   "openai-compatible": "OPENAI_API_KEY",
 };
 
-async function load(name: string, provider: string): Promise<Record<string, unknown>> {
+/**
+ * Literal specifiers, one per provider, so a bundler can see them.
+ *
+ * The obvious version of this is `import(name)` with a variable — it reads
+ * better and it works on Node. It also makes the dependency invisible to
+ * static analysis, and Vercel's file tracing then leaves the provider package
+ * out of the deployed function: fine locally, "needs @ai-sdk/google" in
+ * production, on the host this README tells people to use.
+ *
+ * The cost is that a bundler now resolves all three names even though the
+ * peer dependencies are optional. Missing ones are warnings, not errors,
+ * because each sits behind a catch — and the catch is what turns a missing
+ * package back into a sentence a human can act on.
+ */
+async function load(provider: ProviderId): Promise<Record<string, unknown>> {
   try {
-    // The specifier is a variable so that installing one provider does not
-    // drag the other two in. The ignore comments keep bundlers from trying to
-    // resolve it at build time — this file only ever runs on your server.
-    return (await import(
-      /* webpackIgnore: true */ /* turbopackIgnore: true */ /* @vite-ignore */ name
-    )) as Record<string, unknown>;
-  } catch {
+    switch (provider) {
+      case "google":
+        return (await import("@ai-sdk/google")) as Record<string, unknown>;
+      case "anthropic":
+        return (await import("@ai-sdk/anthropic")) as Record<string, unknown>;
+      case "openai":
+      case "openai-compatible":
+        return (await import("@ai-sdk/openai")) as Record<string, unknown>;
+      default:
+        throw new Error(`no package for provider "${provider}"`);
+    }
+  } catch (err) {
+    const pkg = provider === "google" ? "@ai-sdk/google"
+      : provider === "anthropic" ? "@ai-sdk/anthropic"
+      : "@ai-sdk/openai";
     throw new Error(
-      `The "${provider}" provider needs ${name}. Install it: npm i ${name}`
+      `The "${provider}" provider needs ${pkg}. Install it: npm i ${pkg}\n(${(err as Error).message})`
     );
   }
 }
@@ -82,20 +104,20 @@ export async function resolveModel(spec: ModelSpec): Promise<LanguageModel> {
 
   switch (provider) {
     case "google": {
-      const { createGoogle } = await load("@ai-sdk/google", provider);
+      const { createGoogle } = await load(provider);
       return (createGoogle as CallableFunction)(settings)(model) as LanguageModel;
     }
     case "anthropic": {
-      const { createAnthropic } = await load("@ai-sdk/anthropic", provider);
+      const { createAnthropic } = await load(provider);
       return (createAnthropic as CallableFunction)(settings)(model) as LanguageModel;
     }
     case "openai": {
-      const { createOpenAI } = await load("@ai-sdk/openai", provider);
+      const { createOpenAI } = await load(provider);
       return (createOpenAI as CallableFunction)(settings)(model) as LanguageModel;
     }
     case "openai-compatible": {
       if (!spec.baseURL) throw new Error('provider "openai-compatible" needs a baseURL.');
-      const { createOpenAI } = await load("@ai-sdk/openai", provider);
+      const { createOpenAI } = await load(provider);
       return (createOpenAI as CallableFunction)(settings)(model) as LanguageModel;
     }
     /**
