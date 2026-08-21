@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ArrowOutIcon } from "./icons.js";
 
 /**
@@ -25,11 +26,26 @@ function linkPattern(sections: string[]): RegExp {
 
 const BULLET = /^\s*[-*•]\s+/;
 
+/** What a same-site link needs. Enough to build a router link out of. */
+export interface LinkProps {
+  href: string;
+  children: ReactNode;
+  className: string;
+  onClick?: () => void;
+}
+
 export interface RenderOptions {
   /** First path segments that may become links — "work", "docs", "pricing". */
   sections?: string[];
   /** Called when a visitor follows an internal link. Closes the panel. */
   onNavigate?: () => void;
+  /**
+   * Render same-site links yourself. Without it they are plain anchors, which
+   * on a single-page app means a full reload — pass your router's link here:
+   * `renderLink={(props) => <Link {...props} />}`. External links are always
+   * anchors and never go through this.
+   */
+  renderLink?: (props: LinkProps) => ReactNode;
   /** Show the blinking caret at the end of the last block. */
   caret?: boolean;
 }
@@ -65,11 +81,22 @@ function withLinks(text: string, key: string, options: RenderOptions) {
     }
 
     if (part.startsWith("/")) {
+      const link: LinkProps = {
+        href: part,
+        className: "ad-link",
+        onClick: options.onNavigate,
+        children: (
+          <>
+            {part}
+            <ArrowOutIcon size={11} />
+          </>
+        ),
+      };
+
       return (
-        <a key={`${key}l${i}`} href={part} className="ad-link" onClick={options.onNavigate}>
-          {part}
-          <ArrowOutIcon size={11} />
-        </a>
+        <span key={`${key}l${i}`}>
+          {options.renderLink ? options.renderLink(link) : <a {...link} />}
+        </span>
       );
     }
 

@@ -120,6 +120,21 @@ Colour is one flat set of tokens — `bg`, `fg`, `muted`, `border`, `accent`, `a
 
 Run `pnpm dev` for a playground that writes the snippet for you.
 
+### When the tokens are not enough
+
+A site with its own visual language can replace the pieces that carry it, rather than theming its way toward them:
+
+```tsx
+<Askdock
+  endpoint="/api/askdock"
+  icon={<LogoMark />}                                  // your mark, not the spark
+  renderLauncher={({ open }) => <MyPill onClick={open} />}
+  renderLink={(props) => <Link {...props} />}          // next/link, so no reload
+/>
+```
+
+`renderLink` matters on any single-page app: without it, following a link out of an answer is a full page load.
+
 ## Models
 
 ```ts

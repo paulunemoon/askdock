@@ -40,3 +40,20 @@ Everything is one flat set of tokens, and the default is black and white on purp
 Tokens: `bg`, `fg`, `muted`, `border`, `accent`, `accentFg`, `bubbleBg`, `bubbleFg`, `radius`, `radiusSm`, `font`, `shadow`, `width`, `height`, `z`. They become CSS custom properties on the widget root, so the widget can never repaint your site and your reset can never flatten the widget.
 
 In the script embed the same tokens are attributes: `data-accent`, `data-radius`, `data-launcher`, `data-surface`.
+
+## When the tokens are not enough
+
+Three props hand back the parts that carry a brand:
+
+- `icon` — your mark instead of the default spark, in the header and beside every answer.
+- `renderLauncher` — draw the resting state yourself and call `open()`. Replaces `launcher`.
+- `renderLink` — render same-site links with your router. Without it, following a link out of an answer is a full page load on a single-page app.
+
+```tsx
+<Askdock
+  endpoint="/api/askdock"
+  icon={<LogoMark />}
+  renderLauncher={({ open }) => <MyPill onClick={open} />}
+  renderLink={(props) => <Link {...props} />}
+/>
+```

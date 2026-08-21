@@ -6,7 +6,7 @@ import {
   type Appearance,
   type WidgetConfig,
 } from "@askdock/core";
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   ArrowOutIcon,
   ArrowUpIcon,
@@ -15,7 +15,7 @@ import {
   SparkIcon,
   StopIcon,
 } from "./icons.js";
-import { Answer } from "./markdown.js";
+import { Answer, type LinkProps } from "./markdown.js";
 import { injectStyles } from "./styles.js";
 import { useAskdock } from "./useAskdock.js";
 
@@ -27,6 +27,23 @@ export interface AskdockProps extends Partial<WidgetConfig> {
   /** Controlled open state. Leave it out and the widget manages its own. */
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Your mark instead of the default spark, in the header and beside every
+   * answer. A site with a logo should use it — this is the one part of the
+   * panel that reads as whose assistant it is.
+   */
+  icon?: ReactNode;
+  /**
+   * Your own resting state. The shipped pill and bubble are deliberately
+   * plain; a site with its own language for buttons should draw its own and
+   * call `open()`. Replaces `launcher` entirely.
+   */
+  renderLauncher?: (props: { open: () => void }) => ReactNode;
+  /**
+   * Render same-site links with your router, so following one from an answer
+   * doesn't reload the page: `renderLink={(props) => <Link {...props} />}`.
+   */
+  renderLink?: (props: LinkProps) => ReactNode;
 }
 
 const FALLBACK = {
@@ -49,6 +66,9 @@ export function Askdock({
   open: controlledOpen,
   onOpenChange,
   sections,
+  icon,
+  renderLauncher,
+  renderLink,
   ...config
 }: AskdockProps) {
   const settings = { ...FALLBACK, ...config };
@@ -131,7 +151,9 @@ export function Askdock({
   };
 
   const inline = appearance.surface === "inline";
-  const showLauncher = !inline && !open && appearance.launcher !== "none";
+  // A custom launcher is its own opt-in, so it ignores `launcher: "none"`.
+  const showLauncher =
+    !inline && !open && (Boolean(renderLauncher) || appearance.launcher !== "none");
 
   return (
     <div
@@ -144,7 +166,9 @@ export function Askdock({
       data-open={open || inline}
     >
       {showLauncher &&
-        (appearance.launcher === "bubble" ? (
+        (renderLauncher ? (
+          renderLauncher({ open: () => setOpen(true) })
+        ) : appearance.launcher === "bubble" ? (
           <button
             type="button"
             className="ad-bubble"
@@ -164,9 +188,7 @@ export function Askdock({
       {(open || inline) && (
         <div className="ad-surface" role="dialog" aria-label={settings.name}>
           <header className="ad-head">
-            <span className="ad-avatar">
-              <SparkIcon size={13} />
-            </span>
+            <span className="ad-avatar">{icon ?? <SparkIcon size={13} />}</span>
             <span className="ad-head-text">
               <strong>{settings.name}</strong>
               {settings.tagline && <span>{settings.tagline}</span>}
@@ -183,7 +205,7 @@ export function Askdock({
               <>
                 {settings.intro && (
                   <p className="ad-intro">
-                    <SparkIcon size={13} />
+                    {icon ?? <SparkIcon size={13} />}
                     <span>{settings.intro}</span>
                   </p>
                 )}
@@ -214,12 +236,13 @@ export function Askdock({
                   </p>
                 ) : (
                   <div key={i} className="ad-from-ai">
-                    <SparkIcon size={13} />
+                    {icon ?? <SparkIcon size={13} />}
                     <div>
                       {message.text ? (
                         <Answer
                           text={message.text}
                           sections={sections}
+                          renderLink={renderLink}
                           onNavigate={inline ? undefined : close}
                           caret={streaming && i === messages.length - 1}
                         />
@@ -230,18 +253,31 @@ export function Askdock({
                       {message.sources && message.sources.length > 0 && (
                         <div className="ad-sources">
                           <p className="ad-sources-label">Sources</p>
-                          {message.sources.map((source) => (
-                            <a
-                              key={source.id}
-                              href={source.url}
-                              className="ad-source"
-                              onClick={inline ? undefined : close}
-                            >
-                              <span>{source.title}</span>
-                              {source.kind && <span className="ad-source-kind">{source.kind}</span>}
-                              <ArrowOutIcon />
-                            </a>
-                          ))}
+                          {message.sources.map((source) => {
+                            const link: LinkProps = {
+                              href: source.url,
+                              className: "ad-source",
+                              onClick: inline ? undefined : close,
+                              children: (
+                                <>
+                                  <span>{source.title}</span>
+                                  {source.kind && (
+                                    <span className="ad-source-kind">{source.kind}</span>
+                                  )}
+                                  <ArrowOutIcon />
+                                </>
+                              ),
+                            };
+
+                            // A citation off-site stays an anchor; the router
+                            // only knows about pages on this one.
+                            const external = /^https?:\/\//.test(source.url);
+                            return (
+                              <span key={source.id} style={{ display: "contents" }}>
+                                {renderLink && !external ? renderLink(link) : <a {...link} />}
+                              </span>
+                            );
+                          })}
                         </div>
                       )}
                     </div>
