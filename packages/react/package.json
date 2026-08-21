@@ -1,6 +1,6 @@
 {
   "name": "@askdock/react",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "The Askdock widget for React — pill or bubble launcher, popup or side panel, fully themeable.",
   "license": "MIT",
   "type": "module",
@@ -31,5 +31,25 @@
     "@types/react-dom": "^19.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulunemoon/askdock.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/paulunemoon/askdock#readme",
+  "bugs": "https://github.com/paulunemoon/askdock/issues",
+  "author": "Pauline Mila-Alonso",
+  "keywords": [
+    "chatbot",
+    "chat-widget",
+    "rag",
+    "grounded",
+    "site-search",
+    "ai-sdk",
+    "gemini",
+    "claude",
+    "openai",
+    "support"
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@askdock/embed",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "One <script> tag. Drops the Askdock widget onto any site — Webflow, WordPress, Astro, plain HTML.",
   "license": "MIT",
   "type": "module",
@@ -24,5 +24,25 @@
     "@types/jsdom": "^30.0.0",
     "esbuild": "^0.25.0",
     "jsdom": "^30.0.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulunemoon/askdock.git",
+    "directory": "packages/embed"
+  },
+  "homepage": "https://github.com/paulunemoon/askdock#readme",
+  "bugs": "https://github.com/paulunemoon/askdock/issues",
+  "author": "Pauline Mila-Alonso",
+  "keywords": [
+    "chatbot",
+    "chat-widget",
+    "rag",
+    "grounded",
+    "site-search",
+    "ai-sdk",
+    "gemini",
+    "claude",
+    "openai",
+    "support"
+  ]
 }

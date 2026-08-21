@@ -1,18 +1,52 @@
 {
   "name": "askdock",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Crawl a site into a knowledge base your chat widget can answer from.",
   "license": "MIT",
   "type": "module",
-  "bin": { "askdock": "./dist/cli.js" },
+  "bin": {
+    "askdock": "./dist/cli.js"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./package.json": "./package.json"
   },
-  "files": ["dist"],
-  "scripts": { "build": "tsup", "typecheck": "tsc --noEmit" },
-  "dependencies": { "@askdock/core": "workspace:*" },
-  "engines": { "node": ">=20" }
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@askdock/core": "workspace:*"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulunemoon/askdock.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/paulunemoon/askdock#readme",
+  "bugs": "https://github.com/paulunemoon/askdock/issues",
+  "author": "Pauline Mila-Alonso",
+  "keywords": [
+    "chatbot",
+    "chat-widget",
+    "rag",
+    "grounded",
+    "site-search",
+    "ai-sdk",
+    "gemini",
+    "claude",
+    "openai",
+    "support"
+  ]
 }
